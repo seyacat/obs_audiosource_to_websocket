@@ -34,7 +34,7 @@ struct AudioWebSocketFilter {
 		port = new_port;
 		server = new ix::WebSocketServer(port, "0.0.0.0");
 		
-		server->setOnConnectionCallback([this](std::shared_ptr<ix::ConnectionState> connectionState, ix::WebSocket& webSocket, const ix::WebSocketMessagePtr& msg) {
+		server->setOnClientMessageCallback([this](std::shared_ptr<ix::ConnectionState> connectionState, ix::WebSocket& webSocket, const ix::WebSocketMessagePtr& msg) {
 			if (msg->type == ix::WebSocketMessageType::Open) {
 				blog(LOG_INFO, "AudioWebSocketFilter: Client connected from %s", connectionState->getRemoteIp().c_str());
 			} else if (msg->type == ix::WebSocketMessageType::Close) {

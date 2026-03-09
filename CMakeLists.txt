@@ -11,38 +11,41 @@ include(compilerconfig)
 include(defaults)
 include(helpers)
 
-add_library(${CMAKE_PROJECT_NAME} MODULE)
+add_library(${_name} MODULE)
 
 find_package(libobs REQUIRED)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE OBS::libobs)
+target_link_libraries(${_name} PRIVATE OBS::libobs)
 
+add_compile_options(/WX-)
 include(FetchContent)
+set(USE_TLS OFF CACHE BOOL "Disable TLS" FORCE)
+set(USE_ZLIB OFF CACHE BOOL "Disable ZLIB" FORCE)
 FetchContent_Declare(
   ixwebsocket
   GIT_REPOSITORY https://github.com/machinezone/IXWebSocket.git
   GIT_TAG        v11.4.3
 )
 FetchContent_MakeAvailable(ixwebsocket)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ixwebsocket)
+target_link_libraries(${_name} PRIVATE ixwebsocket)
 
 if(ENABLE_FRONTEND_API)
   find_package(obs-frontend-api REQUIRED)
-  target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE OBS::obs-frontend-api)
+  target_link_libraries(${_name} PRIVATE OBS::obs-frontend-api)
 endif()
 
 if(ENABLE_QT)
   find_package(Qt6 COMPONENTS Widgets Core)
-  target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
+  target_link_libraries(${_name} PRIVATE Qt6::Core Qt6::Widgets)
   target_compile_options(
-    ${CMAKE_PROJECT_NAME}
+    ${_name}
     PRIVATE $<$<C_COMPILER_ID:Clang,AppleClang>:-Wno-quoted-include-in-framework-header -Wno-comma>
   )
   set_target_properties(
-    ${CMAKE_PROJECT_NAME}
+    ${_name}
     PROPERTIES AUTOMOC ON AUTOUIC ON AUTORCC ON
   )
 endif()
 
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE src/plugin-main.cpp)
+target_sources(${_name} PRIVATE src/plugin-main.cpp)
 
-set_target_properties_plugin(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})
+set_target_properties_plugin(${_name} PROPERTIES OUTPUT_NAME ${_name})

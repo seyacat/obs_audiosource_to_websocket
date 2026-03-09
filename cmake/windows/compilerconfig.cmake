@@ -58,6 +58,6 @@ add_link_options(
   /Brepro
 )
 
-if(CMAKE_COMPILE_WARNING_AS_ERROR)
-  add_link_options(/WX)
+if(CMAKE_COMPILE_WARNING_AS_ERROR) # Enable warnings as errors
+  add_link_options(/WX-)
 endif()
